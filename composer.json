@@ -23,7 +23,7 @@
         "contao/manager-plugin": "^2.0"
     },
     "extra": {
-        "contao-manager-plugin": "Amoeotoko\\StripeBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Ameotoko\\StripeBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
