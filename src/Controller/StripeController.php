@@ -15,6 +15,7 @@ use Stripe\Event;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\UnexpectedValueException;
 use Stripe\PaymentIntent;
+use Stripe\Stripe;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +26,10 @@ class StripeController
 {
     private LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(string $stripeKey, LoggerInterface $logger)
     {
+        Stripe::setApiKey($stripeKey);
+
         $this->logger = $logger;
     }
 

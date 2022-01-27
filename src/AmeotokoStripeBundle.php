@@ -12,4 +12,12 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AmeotokoStripeBundle extends Bundle
 {
+    public function getContainerExtension()
+    {
+        if ($this->extension === null) {
+            $this->extension = $this->createContainerExtension();
+        }
+
+        return $this->extension;
+    }
 }

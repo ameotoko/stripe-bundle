@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ameotoko\StripeBundle\DependencyInjection;
 
+use Ameotoko\StripeBundle\Controller\StripeController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -23,5 +24,17 @@ class AmeotokoStripeExtension extends Extension
         );
 
         $loader->load('services.yml');
+
+        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
+
+        $container->setParameter('stripe.secret_key', $config['secret_key']);
+        $container->setParameter('stripe.publishable_key', $config['publishable_key']);
+
+        $container->getDefinition(StripeController::class)->setArgument(0, $config['secret_key']);
+    }
+
+    public function getAlias()
+    {
+        return 'stripe';
     }
 }
