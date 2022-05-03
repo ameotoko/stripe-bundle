@@ -34,7 +34,12 @@ class StripeController
     }
 
     /**
-     * @Route("/_stripe/payment", name="stripe_create_payment_intent", methods={"POST"})
+     * @Route(
+     *     "/_stripe/payment",
+     *     name="stripe_create_payment_intent",
+     *     methods={"POST"},
+     *     defaults={"_allow_preview": true}
+     * )
      */
     public function createPaymentIntent(Request $request): JsonResponse
     {
@@ -58,7 +63,12 @@ class StripeController
     }
 
     /**
-     * @Route("/_stripe/checkout", name="stripe_create_checkout_session", methods={"POST"})
+     * @Route(
+     *     "/_stripe/checkout",
+     *     name="stripe_create_checkout_session",
+     *     methods={"POST"},
+     *     defaults={"_allow_preview": true}
+     * )
      */
     public function createCheckoutSession(Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
