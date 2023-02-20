@@ -42,11 +42,11 @@ stripe:
 
 ## Endpoints
 
-| Endpoint            | Route                            |
-|---------------------|----------------------------------|
-| `/_stripe/payment`  | `stripe_create_payment_intent`   |
-| `/_stripe/checkout` | `stripe_create_checkout_session` |
-| `/_stripe/webhook`  | `stripe_webhook`                 |
+| Endpoint            | Route                            | Response (success)         | Response (error)             |
+|---------------------|----------------------------------|----------------------------|------------------------------|
+| `/_stripe/payment`  | `stripe_create_payment_intent`   | `{"clientSecret": string}` | HTTP 500 `{"error": string}` |
+| `/_stripe/checkout` | `stripe_create_checkout_session` | `{"url": string}`          | HTTP 500 `{"error": string}` |
+| `/_stripe/webhook`  | `stripe_webhook`                 | HTTP 200 (empty)           | HTTP 400 (empty)             |
 
 
 The bundle creates 2 endpoints in your application, which you can call from your Javascript to create payment intents or checkout sessions:
@@ -56,8 +56,6 @@ The bundle creates 2 endpoints in your application, which you can call from your
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-    const stripe = Stripe('<?= \Contao\System::getContainer()->getParameter('stripe.publishable_key') ?>');
-
     const paymentData = {
         success_url: '...',
         cancel_url: '...',
@@ -74,7 +72,7 @@ The bundle creates 2 endpoints in your application, which you can call from your
         body: JSON.stringify(paymentData)
     })
     .then(response => response.json())
-    .then(session => stripe.redirectToCheckout({sessionId: session.id}))
+    .then(session => window.location.href = session.url)
 </script>
 ```
 
