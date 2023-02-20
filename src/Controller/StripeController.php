@@ -87,10 +87,9 @@ class StripeController
 
         $event = new CreateCheckoutEvent($session->toArray());
 
-        // TODO: update event listeners
         $dispatcher->dispatch($event, 'stripe.create_checkout.post');
 
-        return new JsonResponse(['id' => $session->id]);
+        return new JsonResponse(['url' => $session->url]);
     }
 
     /**
