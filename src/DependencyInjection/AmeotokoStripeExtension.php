@@ -20,7 +20,7 @@ class AmeotokoStripeExtension extends Extension
     {
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__.'/../Resources/config')
+            new FileLocator(__DIR__.'/../../config')
         );
 
         $loader->load('services.yml');
@@ -33,7 +33,7 @@ class AmeotokoStripeExtension extends Extension
         $container->getDefinition(StripeController::class)->setArgument(0, $config['secret_key']);
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'stripe';
     }
