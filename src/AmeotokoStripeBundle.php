@@ -20,4 +20,9 @@ class AmeotokoStripeBundle extends Bundle
 
         return $this->extension;
     }
+
+    public function getPath(): string
+    {
+        return dirname(__DIR__);
+    }
 }

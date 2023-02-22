@@ -16,13 +16,14 @@ use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\UnexpectedValueException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class StripeController
+class StripeController extends AbstractController
 {
     private LoggerInterface $logger;
 
@@ -113,5 +114,27 @@ class StripeController
         $dispatcher->dispatch($webhookEvent, 'stripe.' . $event->type);
 
         return $response;
+    }
+
+    /**
+     * This endpoint can be used in `success_url` or `cancel_url` parameter for Stripe's CheckoutSession,
+     * if you open the session in new tab/window with `window.open()` instead of redirect.
+     *
+     * The purpose of the page is to close itself after redirecting back from the checkout page,
+     * because reference to opened window is lost after navigating cross-domain,
+     * and we don't want to leave behind duplicate tabs of the same website.
+     *
+     * Additionally, you can pass a `ref` and `result` parameters in a query string. The page then will send
+     * the value of `result` parameter to the parent window using BroadcastChannel API, to which you can listen
+     * in the parent window to e.g. show "Thank you" message.
+     *
+     * `ref` is a string and will be used as the channel identifier.
+     * `result` can take one of 'success' or 'cancel' values.
+     *
+     * @Route("/_stripe/callback", name="stripe_callback", methods="GET")
+     */
+    public function callback(Request $request): Response
+    {
+        return $this->render('@AmeotokoStripe/callback.html.twig');
     }
 }
