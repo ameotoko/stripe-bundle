@@ -11,11 +11,11 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "contao/core-bundle": "^4.12",
+        "contao/core-bundle": "^4.12 || ^5.0",
         "stripe/stripe-php": "^7.67",
-        "symfony/config": "^5.4",
-        "symfony/dependency-injection": "^5.4",
-        "symfony/http-kernel": "^5.4"
+        "symfony/config": "^5.4 || ^6.0",
+        "symfony/dependency-injection": "^5.4 || ^6.0",
+        "symfony/http-kernel": "^5.4 || ^6.0"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"
