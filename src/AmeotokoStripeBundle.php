@@ -8,11 +8,12 @@ declare(strict_types=1);
 
 namespace Ameotoko\StripeBundle;
 
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AmeotokoStripeBundle extends Bundle
 {
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         if ($this->extension === null) {
             $this->extension = $this->createContainerExtension();

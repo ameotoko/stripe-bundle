@@ -20,28 +20,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class StripeController extends AbstractController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(string $stripeKey, LoggerInterface $logger)
+    public function __construct(string $stripeKey, private readonly LoggerInterface $logger)
     {
         Stripe::setApiKey($stripeKey);
-
-        $this->logger = $logger;
     }
 
-    /**
-     * @Route(
-     *     "/_stripe/payment",
-     *     name="stripe_create_payment_intent",
-     *     methods={"POST"},
-     *     defaults={"_allow_preview": true}
-     * )
-     */
+    #[Route('/_stripe/payment', 'stripe_create_payment_intent', defaults: ['_allow_preview' => true], methods: 'POST')]
     public function createPaymentIntent(Request $request): JsonResponse
     {
         $paymentData = json_decode($request->getContent());
@@ -63,14 +52,7 @@ class StripeController extends AbstractController
         }
     }
 
-    /**
-     * @Route(
-     *     "/_stripe/checkout",
-     *     name="stripe_create_checkout_session",
-     *     methods={"POST"},
-     *     defaults={"_allow_preview": true}
-     * )
-     */
+    #[Route('/_stripe/checkout', 'stripe_create_checkout_session', defaults: ['_allow_preview' => true], methods: 'POST')]
     public function createCheckoutSession(Request $request, EventDispatcherInterface $dispatcher): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -93,9 +75,7 @@ class StripeController extends AbstractController
         return new JsonResponse(['url' => $session->url]);
     }
 
-    /**
-     * @Route("/_stripe/webhook", name="stripe_webhook", methods={"POST"})
-     */
+    #[Route('/_stripe/webhook', 'stripe_webhook', methods: 'POST')]
     public function webhook(Request $request, EventDispatcherInterface $dispatcher): Response
     {
         try {
@@ -110,8 +90,8 @@ class StripeController extends AbstractController
         $response = new Response();
         $response->sendHeaders();
 
-        // allow listeners to subscribe to events like 'stripe.checkout.session.completed'
-        $dispatcher->dispatch($webhookEvent, 'stripe.' . $event->type);
+        // allow listeners to subscribe to events like 'checkout.session.completed'
+        $dispatcher->dispatch($webhookEvent, $event->type);
 
         return $response;
     }
@@ -130,9 +110,8 @@ class StripeController extends AbstractController
      *
      * `ref` is a string and will be used as the channel identifier.
      * `result` can take one of 'success' or 'cancel' values.
-     *
-     * @Route("/_stripe/callback", name="stripe_callback", methods="GET")
      */
+    #[Route('/_stripe/callback', 'stripe_callback', methods: 'GET')]
     public function callback(Request $request): Response
     {
         return $this->render('@AmeotokoStripe/callback.html.twig');
