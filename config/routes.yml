@@ -1,3 +1,0 @@
-stripe_bundle:
-    resource: '@AmeotokoStripeBundle/src/Controller/StripeController.php'
-    type: annotation
